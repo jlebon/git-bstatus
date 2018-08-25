@@ -335,11 +335,8 @@ fn print_branches(
         .map(|b| b.timestamp_rel.len())
         .max()
         .unwrap();
-    let max_ahead_len = branches
-        .iter()
-        .map(|b| utils::count_digits(b.ahead))
-        .max()
-        .unwrap();
+    let max_ahead = branches.iter().map(|b| b.ahead).max().unwrap();
+    let max_ahead_len = utils::count_digits(max_ahead);
 
     // use prefix/suffix since regular paint() conflicts with branch_width
     let (green_prefix, green_suffix) = (Colour::Green.prefix(), Colour::Green.suffix());
