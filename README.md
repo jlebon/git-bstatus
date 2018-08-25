@@ -17,15 +17,16 @@ There are 53 local branches (6 merged, 47 unmerged).
   (use "git bstatus -m" or "git bstatus -u" to list them)
 ```
 
-(Though I alias it to  `git lsb` for faster typing).
+(Though I alias it to `git lsb` for faster typing).
 
-Advantages over `git branch` are:
+The main difference from `git branch` is that it's designed
+to be friendlier to humans, in the way `git status` is:
 - quick view of your recently active branches to make
   finding and switching between them a breeze
 - column for human-formatted relative timestamp
 - column for number of commits on that branch
-- easily list added commits across branches with `-v`
-- easily list only (un)merged branches with `-m/-u`
+- list added commits across branches with `-v`
+- list only (un)merged branches with `-m/-u`
 
 You may find that something like
 `git branch -v --sort=-committerdate | head -n5` is
@@ -52,6 +53,10 @@ $ git lsb -v
     f393131c build: Fix building rust in debug mode
     6a274b83 build-sys: Hard require Rust
 ```
+
+In the above output, `+2` means that there are two commits
+on that branch; the last commit listed is the first one that
+is shared with the master branch.
 
 # Installation
 
