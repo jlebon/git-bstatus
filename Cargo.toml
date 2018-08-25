@@ -1,0 +1,9 @@
+[package]
+name = "git-bstatus"
+version = "0.1.0"
+authors = ["Jonathan Lebon <jonathan@jlebon.com>"]
+
+[dependencies]
+git2 = "0.7"
+clap = "~2.31"
+ansi_term = "0.11"
