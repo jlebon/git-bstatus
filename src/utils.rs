@@ -60,8 +60,8 @@ fn plural(s: &str, n: u64) -> String {
 
 pub fn count_digits(mut n: usize) -> usize {
     match n {
-        0...9 => 1,
-        10...99 => 2,
+        0..=9 => 1,
+        10..=99 => 2,
         _ => {
             let mut i = 0;
             while n > 0 {

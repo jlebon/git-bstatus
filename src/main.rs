@@ -2,11 +2,7 @@
  * SPDX-License-Identifier: MIT
  * */
 
-#[macro_use]
-extern crate clap;
-extern crate ansi_term;
-extern crate git2;
-
+use clap::clap_app;
 use ansi_term::{Colour, Style};
 use std::error::Error;
 use std::ffi::OsStr;
@@ -51,10 +47,10 @@ const RECENT_N: usize = 5;
 const LOCAL_BRANCH_REF_PREFIX: &str = "refs/heads/";
 
 fn main() {
-    let matches = clap_app!((crate_name!()) =>
-            (version: crate_version!())
-            (author: crate_authors!())
-            (about: crate_description!())
+    let matches = clap::clap_app!((clap::crate_name!()) =>
+            (version: clap::crate_version!())
+            (author: clap::crate_authors!())
+            (about: clap::crate_description!())
             (@arg REPO: --repo +takes_value "Git repo to target")
             (@arg BRANCH: ... "Branches to list (or substrings)")
             (@arg verbose: -v --verbose "List added commits")
@@ -111,7 +107,7 @@ fn run(
     output_mode: OutputMode,
     filter: BranchFilter,
     reverse: bool,
-) -> Result<(), Box<Error>> {
+) -> Result<(), Box<dyn Error>> {
     let repo = match repo_path {
         Some(s) => git2::Repository::discover(s)?,
         None => git2::Repository::discover(std::env::current_dir()?)?,
@@ -137,7 +133,7 @@ fn scan_branches(
     maybe_patterns: &Option<Vec<&str>>,
     filter: BranchFilter,
     reverse: bool,
-) -> Result<BranchesInfo, Box<Error>> {
+) -> Result<BranchesInfo, Box<dyn Error>> {
     let default_sha = find_default_sha(repo)?;
 
     let mut n_merged: usize = 0;
@@ -218,7 +214,7 @@ fn scan_branches(
 
 /// Get the default SHA against which comparisons should be made to determine +ahead number.
 /// This is usually "master", or the default branch to check out after cloning.
-fn find_default_sha(repo: &git2::Repository) -> Result<git2::Oid, Box<Error>> {
+fn find_default_sha(repo: &git2::Repository) -> Result<git2::Oid, Box<dyn Error>> {
     // go through all the remotes, and find which has a HEAD branch
     // then resolve that to the local branch
     let mut head_ref: Option<git2::Reference> = None;
@@ -268,7 +264,7 @@ fn find_default_sha(repo: &git2::Repository) -> Result<git2::Oid, Box<Error>> {
     )))
 }
 
-fn print_human(repo: &git2::Repository, info: &BranchesInfo) -> Result<(), Box<Error>> {
+fn print_human(repo: &git2::Repository, info: &BranchesInfo) -> Result<(), Box<dyn Error>> {
     let head = repo.head()?;
     if head.is_branch() {
         let name = head.name().unwrap();
@@ -312,7 +308,7 @@ fn print_listing(
     repo: &git2::Repository,
     branches: &[BranchInfo],
     commits: bool,
-) -> Result<(), Box<Error>> {
+) -> Result<(), Box<dyn Error>> {
     print_branches(repo, &branches, commits, false)?;
 
     Ok(())
@@ -323,7 +319,7 @@ fn print_branches(
     branches: &[BranchInfo],
     list_commits: bool,
     tab: bool,
-) -> Result<(), Box<Error>> {
+) -> Result<(), Box<dyn Error>> {
     if branches.is_empty() {
         return Ok(());
     }
