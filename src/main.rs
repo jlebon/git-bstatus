@@ -250,9 +250,11 @@ fn find_default_sha(repo: &git2::Repository) -> Result<git2::Oid, Box<dyn Error>
         }
     }
 
-    // no HEAD remote ref, or not connected to a local branch, just guess "master", and if
-    // that's not it, throw
+    // no HEAD remote ref, or not connected to a local branch, just guess "master" or "main", and
+    // if that's not it, throw
     if let Ok(b) = repo.find_branch("master", git2::BranchType::Local) {
+        return Ok(b.get().peel_to_commit()?.id());
+    } else if let Ok(b) = repo.find_branch("main", git2::BranchType::Local) {
         return Ok(b.get().peel_to_commit()?.id());
     }
 
