@@ -2,8 +2,8 @@
  * SPDX-License-Identifier: MIT
  * */
 
-use clap::clap_app;
 use ansi_term::{Colour, Style};
+use clap::clap_app;
 use std::error::Error;
 use std::ffi::OsStr;
 
@@ -59,13 +59,11 @@ fn main() {
             (@arg unmerged: -u --unmerged "List only unmerged branches")
             (@arg reverse: -r --reverse "Reverse listing order")
             (@arg name_only: -n --("name-only") "Print branch names only")
-    ).get_matches();
+    )
+    .get_matches();
 
     /* just collapse to vector now for later */
-    let maybe_patterns = match matches.values_of("BRANCH") {
-        Some(values) => Some(values.collect()),
-        None => None,
-    };
+    let maybe_patterns = matches.values_of("BRANCH").map(|values| values.collect());
 
     let filter = if matches.is_present("all")
         || (matches.is_present("merged") && matches.is_present("unmerged"))
@@ -113,7 +111,7 @@ fn run(
         None => git2::Repository::discover(std::env::current_dir()?)?,
     };
 
-    let info = scan_branches(&repo, &maybe_patterns, filter, reverse)?;
+    let info = scan_branches(&repo, maybe_patterns, filter, reverse)?;
 
     match output_mode {
         OutputMode::Human => print_human(&repo, &info)?,
@@ -309,7 +307,7 @@ fn print_listing(
     branches: &[BranchInfo],
     commits: bool,
 ) -> Result<(), Box<dyn Error>> {
-    print_branches(repo, &branches, commits, false)?;
+    print_branches(repo, branches, commits, false)?;
 
     Ok(())
 }
