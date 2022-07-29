@@ -5,6 +5,6 @@ authors = ["Jonathan Lebon <jonathan@jlebon.com>"]
 edition = "2018"
 
 [dependencies]
-git2 = "0.7"
-clap = "~2.31"
-ansi_term = "0.11"
+git2 = "0.15"
+clap = "2.33"
+ansi_term = "0.12"
