@@ -382,7 +382,7 @@ fn print_branches(
             println!();
 
             let mut revwalk = repo.revwalk()?;
-            revwalk.set_sorting(git2::Sort::TOPOLOGICAL);
+            revwalk.set_sorting(git2::Sort::TOPOLOGICAL)?;
             revwalk.push(branch.oid)?;
             for (i, maybe_oid) in revwalk.enumerate() {
                 let oid = maybe_oid?;
